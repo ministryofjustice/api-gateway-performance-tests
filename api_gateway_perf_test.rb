@@ -1,42 +1,48 @@
-require_relative './gen_auth'
 require 'benchmark'
-require 'httparty'
+require 'optparse'
+require 'byebug'
 
-BASE_URL              = 'https://noms-api-preprod.dsd.io/nomisapi'
+require_relative './gen_auth'
+require_relative './command_line_parser'
+require_relative './httparty_adapter'
+
+BASE_URL              = ENV['NOMIS_API_BASE_URL'] || 'https://noms-api-preprod.dsd.io/nomisapi'
 ENDPOINT_1            = "#{BASE_URL}/health"
 ENDPOINT_2            = "#{BASE_URL}/foobar"
 
-CONCURRENT_REQUESTS = ARGV[0].to_i || 10
+adapter = HTTPartyAdapter
+puts opts = CommandLineParser.parse_opts
 
 threads = []
 logs = []
+responses = []
 
-CONCURRENT_REQUESTS.times.each do |i|
+puts "total_time, code, appserver_time, db_time"
+opts[:concurrent_users].times.each do |i|
   threads << Thread.new do
+    responses[i] = []
     start = Time.now
-    logs[i] = [HTTParty.get(ENDPOINT_1, headers: { Authorization: GenAuth.run })]
+
+    auth = GenAuth.run
+    response = HTTPartyAdapter.get(url: ENDPOINT_1,
+                                   headers: { Authorization: auth })
     response_time = Time.now - start
-    logs[i] << (response_time * 1000).to_i
+    result = HTTPartyAdapter.parse_response(response)
+    result[:total_time] = (response_time * 1000).to_i
+    responses[i] << result
+    puts [result[:total_time], result[:code], result[:appserver_time], result[:db_time]].join(', ')
   end
+  sleep(opts[:rampup_per_user])
 end
 
 threads.each(&:join)
 
-output = logs.inject([]) do |arr, log|
-  time = log[1]
-  code = log[0].code
-  appserver_time = log[0].headers['server-timing'].split(',').first.gsub(/\D/, '').to_i rescue nil
-  db_time = log[0].headers['server-timing'].split(',').last.gsub(/\D/, '').to_i rescue nil
+all_responses = responses.flatten
 
-  arr << [time, code, appserver_time, db_time]
-end
-
-puts (["total_time, code, appserver_time"] + output.map{ |o| o.join(', ') }).join("\n")
-
-average_total_time = output.inject(0){ |sum, l| sum + l[0] }.to_f / output.size
-average_appserver_time = output.inject(0){ |sum, l| sum + l[2] }.to_f / output.size rescue ''
-average_db_time = output.inject(0){ |sum, l| sum + l[3] }.to_f / output.size rescue ''
-status_codes = output.map { |l| l[1] }.flatten.sort.inject(Hash.new(0)) {|h, v| h[v] += 1; h}
+average_total_time = all_responses.inject(0){ |sum, l| sum + l[:total_time] }.to_f / all_responses.size
+average_appserver_time = all_responses.inject(0){ |sum, l| sum + l[:appserver_time] }.to_f / all_responses.size rescue ''
+average_db_time = all_responses.inject(0){ |sum, l| sum + l[:db_time] }.to_f / all_responses.size rescue ''
+status_codes = all_responses.map { |l| l[:code] }.flatten.sort.inject(Hash.new(0)) {|h, v| h[v] += 1; h}
 
 puts
 puts "Average total time: #{average_total_time}"
