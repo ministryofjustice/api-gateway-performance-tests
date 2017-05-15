@@ -13,6 +13,13 @@ class CommandLineParser
            'seconds delay between starting each concurrent user') do |r|
         opts[:rampup_per_user] = r.to_i
       end
+      o.on('-b', '--batches=',
+           'comma-separated names of pre-configured batch tests to run') do |b|
+        opts[:batches] = b.to_s.split(',').compact
+      end
+      o.on('-u', '--url=', 'URL to hit') do |u|
+        opts[:url] = u
+      end
       o.on('-h') do
         puts o
         exit 0

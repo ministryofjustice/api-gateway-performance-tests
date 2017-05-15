@@ -5,11 +5,12 @@ class ResponsesPrinter
     puts 'total_time, code, appserver_time, db_time'
   end
 
-  def self.print(response)
-    puts [response[:total_time],
-          response[:code],
-          response[:appserver_time],
-          response[:db_time]].join(', ')
+  def self.print(response, prefix = nil)
+    puts [prefix,
+          response[:total_time].to_s,
+          response[:code].to_s,
+          response[:appserver_time].to_s,
+          response[:db_time].to_s].compact.join(', ')
   end
 
   def self.print_statistics(all_responses=[])
@@ -19,7 +20,8 @@ class ResponsesPrinter
     end
 
     puts 'Status code counts: '
-    puts count_status_codes(all_responses).join('\n- ')
+    puts count_status_codes(all_responses).join("\n- ")
+    puts "(total #{all_responses.count})"
   end
 
   def self.totals(all_responses)
@@ -46,6 +48,6 @@ class ResponsesPrinter
                        pct: responses.count * 100.0 / all_responses.size.to_f }
     end
     
-    counts.map { |code, count| "#{code}: #{count[:count]} (#{count[:pct]}%)" }
+    counts.map { |code, count| "#{code}: #{count[:count]} (#{sprintf('%.1f', count[:pct])}%)" }
   end
 end
