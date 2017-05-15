@@ -2,6 +2,7 @@ require 'benchmark'
 require 'optparse'
 require 'byebug'
 
+
 require_relative './gen_auth'
 require_relative './command_line_parser'
 require_relative './request_group'
@@ -49,3 +50,6 @@ all_responses = responses.flatten
 puts "\n\n"
 puts '-----------------------'
 ResponsesPrinter.print_statistics(all_responses)
+puts "\n"
+ResponsesPrinter.print_status_code_counts(all_responses)
+puts "\n"
