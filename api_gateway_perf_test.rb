@@ -43,6 +43,7 @@ end
 
 threads.each(&:join)
 
+puts "calculating ..."
 all_responses = responses.flatten
 
 puts "\n\n"

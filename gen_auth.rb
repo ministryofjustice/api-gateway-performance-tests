@@ -21,7 +21,7 @@ class GenAuth
     end
 
     payload = {
-      iat: Time.now.to_i,
+      iat: Time.now.to_i + ENV['NOMIS_API_IAT_FUDGE_FACTOR'].to_i,
       token: client_token
     }
 
