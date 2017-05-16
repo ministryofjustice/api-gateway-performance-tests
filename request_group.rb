@@ -33,8 +33,9 @@ class RequestGroup
                                     headers: { Authorization: GenAuth.run })
             responses << result
             ResponsesPrinter.print(result, request_prefix)
-          rescue e
+          rescue => e
             puts "#{request_prefix} exception - #{e.message}"
+            puts e.backtrace
           end
           puts "#{prefix} waiting #{interval_between_requests}s between requests"
           sleep(interval_between_requests)
