@@ -26,7 +26,8 @@ default_batch_opts = {
   number_of_users: OPTS[:concurrent_users],
   url: (OPTS[:url] || ENDPOINT_1),
   interval_between_requests: OPTS[:interval_between_requests].to_i,
-  interval_between_users: OPTS[:rampup_per_user].to_i
+  interval_between_users: OPTS[:rampup_per_user].to_i,
+  number_of_requests: OPTS[:number_of_requests]
 }
 
 # start of main loop
