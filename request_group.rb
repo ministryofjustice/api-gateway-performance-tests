@@ -8,7 +8,8 @@ require_relative './responses_printer'
 class RequestGroup
   attr_accessor :url, :label,
                 :number_of_users, :number_of_requests,
-                :interval_between_requests, :interval_between_users
+                :interval_between_requests, :interval_between_users,
+                :verify_ssl
 
   def initialize(params = {})
     self.url = params[:url]
@@ -17,6 +18,7 @@ class RequestGroup
     self.number_of_users = params[:number_of_users] || 1
     self.interval_between_requests = params[:interval_between_requests] || 0
     self.interval_between_users = params[:interval_between_users] || 0
+    self.verify_ssl = params[:verify_ssl] || false
   end
 
   def run(threads, responses)
@@ -30,6 +32,7 @@ class RequestGroup
           puts "#{request_prefix} starting"
           begin
             result = ApiRequest.get(url: url,
+                                    verify: self.verify_ssl,
                                     headers: { Authorization: GenAuth.run })
             responses << result
             ResponsesPrinter.print(result, request_prefix)

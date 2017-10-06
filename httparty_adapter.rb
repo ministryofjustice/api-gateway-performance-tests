@@ -8,7 +8,7 @@ class HTTPartyAdapter
   #   :headers  (optional) any headers to provide
   def self.get(opts = {})
     raise ':url is required' unless opts[:url]
-    HTTParty.get(opts[:url], headers: opts[:headers] || {})
+    HTTParty.get(opts[:url], verify: opts[:verify], headers: opts[:headers] || {})
   end
 
   def self.parse_response(response)
