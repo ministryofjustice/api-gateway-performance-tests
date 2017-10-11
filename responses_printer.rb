@@ -28,10 +28,16 @@ module ResponsesPrinter
     end
   end
 
-  def print_status_code_counts(all_responses = [])
+  def print_status_code_counts(all_responses = [], total_requests=1)
     puts 'Status codes: '
-    puts count_status_codes(all_responses).join("\n")
-    puts "(total #{all_responses.count})"
+    puts count_status_codes(all_responses, total_requests).join("\n")
+    puts "Total responses: #{all_responses.count})"
+  end
+
+  def print_missing_responses(all_responses, total_requests)
+    missing_requests = total_requests - all_responses.count
+    percentage = missing_requests * 100.0 / total_requests
+    puts "Missing responses: #{missing_requests} (#{format('%.1f', percentage)}%)"
   end
 
   def mean(all_responses, sym)
@@ -46,12 +52,12 @@ module ResponsesPrinter
     DescriptiveStatistics.standard_deviation(all_responses) { |r| r[sym] }
   end
 
-  def count_status_codes(all_responses)
+  def count_status_codes(all_responses, total_requests)
     responses_by_code = all_responses.group_by { |r| r[:code] }
     counts = {}
     responses_by_code.each do |code, responses|
       counts[code] = { count: responses.count,
-                       pct: responses.count * 100.0 / all_responses.size.to_f }
+                       pct: responses.count * 100.0 / total_requests.to_f }
     end
     
     counts.map do |code, count|

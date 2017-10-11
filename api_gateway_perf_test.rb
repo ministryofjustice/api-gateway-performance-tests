@@ -30,6 +30,8 @@ default_batch_opts = {
   number_of_requests: OPTS[:number_of_requests] || 1
 }
 
+total_requests = 0
+
 # start of main loop
 batches_to_run.each do |batch_config|
   # create a thread for each batch
@@ -41,6 +43,7 @@ batches_to_run.each do |batch_config|
     # each batch creates one thread per user
     batch.run(threads, responses)
   end
+  total_requests = total_requests + (batch.number_of_users * batch.number_of_requests)
 end
 
 threads.each(&:join)
@@ -52,5 +55,6 @@ puts "\n\n"
 puts '-----------------------'
 ResponsesPrinter.print_statistics(all_responses)
 puts "\n"
-ResponsesPrinter.print_status_code_counts(all_responses)
+ResponsesPrinter.print_status_code_counts(all_responses, total_requests)
+ResponsesPrinter.print_missing_responses(all_responses, total_requests)
 puts "\n"
