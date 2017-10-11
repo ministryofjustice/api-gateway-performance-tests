@@ -31,7 +31,7 @@ module ResponsesPrinter
   def print_status_code_counts(all_responses = [], total_requests=1)
     puts 'Status codes: '
     puts count_status_codes(all_responses, total_requests).join("\n")
-    puts "Total responses: #{all_responses.count})"
+    puts "Total responses: #{all_responses.count}"
   end
 
   def print_missing_responses(all_responses, total_requests)
