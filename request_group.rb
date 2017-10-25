@@ -6,13 +6,22 @@ require_relative './responses_printer'
 # with a given interval between each request, and between the start
 # of each user
 class RequestGroup
-  attr_accessor :url, :label,
+  PRISONERS = [
+    { prisoner_id: "G4027GP", prison_id: "FNI" },
+    { prisoner_id: "G4805UP", prison_id: "CFI" },
+    { prisoner_id: "G0351UK", prison_id: "LLI" },
+    { prisoner_id: "G4591GU", prison_id: "WLI" },
+    { prisoner_id: "G5507UO", prison_id: "WYI" },
+    { prisoner_id: "G0682VU", prison_id: "LEI" }
+  ]
+
+  attr_accessor :endpoints, :label,
                 :number_of_users, :number_of_requests,
                 :interval_between_requests, :interval_between_users,
                 :verify_ssl
 
   def initialize(params = {})
-    self.url = params[:url]
+    self.endpoints = params[:endpoints]
     self.label = params[:label]
     self.number_of_requests = params[:number_of_requests] || 1
     self.number_of_users = params[:number_of_users] || 1
@@ -31,9 +40,38 @@ class RequestGroup
           request_prefix = "#{prefix} request #{request_no}"
           puts "#{request_prefix} starting"
           begin
-            result = ApiRequest.get(url: url,
-                                    verify: self.verify_ssl,
-                                    headers: { Authorization: GenAuth.run })
+            prisoner = PRISONERS[rand(6)]
+
+            endpoint = endpoints[rand(11)]
+
+            url = endpoint[:endpoint]
+
+            if url =~ /NOMS_ID/
+              url.gsub!(/NOMS_ID/, prisoner[:prisoner_id])
+            end
+
+            if url =~ /PRISON_ID/
+              url.gsub!(/PRISON_ID/, prisoner[:prison_id])
+            end
+
+            if url =~ /DATETIME/
+              url.gsub!(/DATETIME/, (Time.now - 60).to_s)
+            end
+
+            method = endpoint[:method]
+
+            case method
+              when :get
+                result = ApiRequest.get(url: url,
+                                        verify: self.verify_ssl,
+                                        headers: { Authorization: GenAuth.run })
+              when :post
+                result = ApiRequest.post(url: url,
+                                        verify: self.verify_ssl,
+                                        headers: { Authorization: GenAuth.run })
+            end
+
+            puts result
             responses << result
             ResponsesPrinter.print(result, request_prefix)
           rescue => e

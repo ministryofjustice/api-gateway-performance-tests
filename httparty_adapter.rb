@@ -11,6 +11,11 @@ class HTTPartyAdapter
     HTTParty.get(opts[:url], verify: opts[:verify], headers: opts[:headers] || {})
   end
 
+  def self.post(opts = {})
+    raise ':url is required' unless opts[:url]
+    HTTParty.post(opts[:url], verify: opts[:verify], headers: opts[:headers] || {})
+  end
+
   def self.parse_response(response)
     timings = split_timings(response.headers['server-timing'])
     {
