@@ -60,7 +60,7 @@ total_requests = 0
 # start of main loop
 batches_to_run.each do |batch_config|
   # create a thread for each batch
-  this_batch = default_batch_opts.merge(batch_config)
+  this_batch = batch_config.merge(default_batch_opts)
   batch = RequestGroup.new(this_batch)
 
   threads << Thread.new do
