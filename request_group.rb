@@ -40,9 +40,8 @@ class RequestGroup
           request_prefix = "#{prefix} request #{request_no}"
           puts "#{request_prefix} starting"
           begin
-            prisoner = PRISONERS[rand(PRISONERS.length + 1)]
-
-            endpoint = endpoints[rand(endpoints.length + 1)]]
+            prisoner = PRISONERS[rand(PRISONERS.length)]
+            endpoint = endpoints[rand(endpoints.length)]
 
             url = endpoint[:endpoint]
 
@@ -63,6 +62,10 @@ class RequestGroup
             end
 
             method = endpoint[:method]
+
+            puts "DEBUG DEBUG DEBUG"
+            puts url
+            puts method
 
             case method
               when :get
