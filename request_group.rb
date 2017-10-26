@@ -62,6 +62,7 @@ class RequestGroup
 
             case method
               when :get
+                puts url
                 result = ApiRequest.get(url: url,
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
