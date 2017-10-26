@@ -43,7 +43,6 @@ class RequestGroup
             prisoner = PRISONERS[rand(6)]
 
             endpoint = endpoints[rand(11)]
-
             url = endpoint[:endpoint]
 
             if url =~ /NOMS_ID/
@@ -60,10 +59,6 @@ class RequestGroup
 
             method = endpoint[:method]
 
-            puts "DEBUG"
-            puts url
-            puts method
-
             case method
               when :get
                 result = ApiRequest.get(url: url,
@@ -76,7 +71,6 @@ class RequestGroup
                                         headers: { Authorization: GenAuth.run })
             end
 
-            puts result
             responses << result
             ResponsesPrinter.print(result, request_prefix)
           rescue => e

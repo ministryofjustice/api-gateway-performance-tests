@@ -14,8 +14,6 @@ class HTTPartyAdapter
   def self.post(opts = {})
     raise ':url is required' unless opts[:url]
 
-    puts "xxxxxx"
-    puts opts[:body]
     HTTParty.post(opts[:url], body: opts[:body].to_json, verify: opts[:verify], headers: opts[:headers].merge('Content-Type' => 'application/json', 'Accept' => 'application/json') || {})
   end
 
