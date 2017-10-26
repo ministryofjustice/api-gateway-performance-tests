@@ -60,14 +60,18 @@ class RequestGroup
 
             method = endpoint[:method]
 
+            puts "DEBUG"
+            puts url
+            puts method
+
             case method
               when :get
-                puts url
                 result = ApiRequest.get(url: url,
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
               when :post
                 result = ApiRequest.post(url: url,
+                                        body: endpoint[:body],
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
             end
