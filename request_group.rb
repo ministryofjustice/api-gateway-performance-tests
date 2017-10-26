@@ -40,9 +40,10 @@ class RequestGroup
           request_prefix = "#{prefix} request #{request_no}"
           puts "#{request_prefix} starting"
           begin
-            prisoner = PRISONERS[rand(6)]
+            prisoner = PRISONERS[rand(PRISONERS.length + 1)]
 
-            endpoint = endpoints[rand(11)]
+            endpoint = endpoints[rand(endpoints.length + 1)]]
+
             url = endpoint[:endpoint]
 
             if url =~ /NOMS_ID/
@@ -53,8 +54,12 @@ class RequestGroup
               url.gsub!(/PRISON_ID/, prisoner[:prison_id])
             end
 
-            if url =~ /DATETIME/
-              url.gsub!(/DATETIME/, (Time.now - 60).to_s)
+            if url =~ /DATETIMEENCODED/
+              url.gsub!(/DATETIMEENCODED/, URI.encode((Time.now - 60).strftime("%Y-%m-%e %H:%M:%S.%L")))
+            end
+
+            if url =~ /DATETIMEISO/
+              url.gsub!(/DATETIMEISO/, (Time.now - 60).utc.iso8601)
             end
 
             method = endpoint[:method]
