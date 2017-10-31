@@ -4,6 +4,8 @@ require_relative './responses_printer'
 
 require_relative './t3/prisoners'
 
+require 'securerandom'
+
 # wrapper around a number of concurrent users accessing a given url
 # with a given interval between each request, and between the start
 # of each user
