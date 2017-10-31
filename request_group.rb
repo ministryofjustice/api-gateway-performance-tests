@@ -74,8 +74,15 @@ class RequestGroup
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
               when :post
+                this_body = endpoint.body
+                this_body.each do |key, value|
+                  if value == :random_hex
+                    this_body[key] = SecureRandom.hex
+                  end
+                end
+              end
                 result = ApiRequest.post(url: url,
-                                        body: endpoint[:body],
+                                        body: this_body,
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
             end
