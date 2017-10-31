@@ -39,11 +39,11 @@ class RequestGroup
             url = endpoint[:endpoint]
 
             if url =~ /NOMIS_ID/
-              url.gsub!(/NOMIS_ID/, prisoner[:prisoner_id])
+              url.gsub!(/NOMIS_ID/, prisoner[:nomis_id])
             end
 
             if url =~ /PRISON_ID/
-              url.gsub!(/PRISON_ID/, prisoner[:nomis_id])
+              url.gsub!(/PRISON_ID/, prisoner[:prison_id])
             end
 
             if url =~ /DOB/
@@ -51,7 +51,7 @@ class RequestGroup
             end
 
             if url =~ /OFFENDER_ID/
-              url.gsub!(/OFFENDER_ID/, prisoner[:nomis_id])
+              url.gsub!(/OFFENDER_ID/, prisoner[:offender_id])
             end
 
             if url =~ /DATETIMEENCODED/
