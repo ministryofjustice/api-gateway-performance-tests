@@ -2,19 +2,12 @@ require_relative './httparty_adapter'
 require_relative './api_request'
 require_relative './responses_printer'
 
+require_relative './t3/prisoners'
+
 # wrapper around a number of concurrent users accessing a given url
 # with a given interval between each request, and between the start
 # of each user
 class RequestGroup
-  PRISONERS = [
-    { prisoner_id: "G4027GP", prison_id: "FNI" },
-    { prisoner_id: "G4805UP", prison_id: "CFI" },
-    { prisoner_id: "G0351UK", prison_id: "LLI" },
-    { prisoner_id: "G4591GU", prison_id: "WLI" },
-    { prisoner_id: "G5507UO", prison_id: "WYI" },
-    { prisoner_id: "G0682VU", prison_id: "LEI" }
-  ]
-
   attr_accessor :endpoints, :label,
                 :number_of_users, :number_of_requests,
                 :interval_between_requests, :interval_between_users,
@@ -45,12 +38,20 @@ class RequestGroup
 
             url = endpoint[:endpoint]
 
-            if url =~ /NOMS_ID/
-              url.gsub!(/NOMS_ID/, prisoner[:prisoner_id])
+            if url =~ /NOMIS_ID/
+              url.gsub!(/NOMIS_ID/, prisoner[:prisoner_id])
             end
 
             if url =~ /PRISON_ID/
-              url.gsub!(/PRISON_ID/, prisoner[:prison_id])
+              url.gsub!(/PRISON_ID/, prisoner[:nomis_id])
+            end
+
+            if url =~ /DOB/
+              url.gsub!(/DOB/, prisoner[:dob])
+            end
+
+            if url =~ /OFFENDER_ID/
+              url.gsub!(/OFFENDER_ID/, prisoner[:nomis_id])
             end
 
             if url =~ /DATETIMEENCODED/
