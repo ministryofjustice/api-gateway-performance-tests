@@ -12,6 +12,5 @@ ENDPOINTS = [
   { endpoint: "#{BASE_URL}/offenders/OFFENDER_ID/visits/available_dates?start_date=#{today}&end_date=#{one_week_from_today}", method: :get },
   { endpoint: "#{BASE_URL}/offenders/OFFENDER_ID/visits/restrictions", method: :get },
   { endpoint: "#{BASE_URL}/offenders/OFFENDER_ID/visits/contact_list", method: :get },
-  { endpoint: "#{BASE_URL}/offenders/events/case_notes_for_delius?from_datetime=DATETIMEISO", method: :get },
   { endpoint: "#{BASE_URL}/prison/PRISON_ID/offenders/NOMIS_ID/transactions/", method: :post, body: { type: "MRPR", description: "Misc credit", amount: 1, client_transaction_id: "1234", client_unique_ref: :random_hex } },
 ]
