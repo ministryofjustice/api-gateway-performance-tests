@@ -76,7 +76,7 @@ class RequestGroup
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
               when :post
-                this_body = endpoint[:body]
+                this_body = endpoint[:body].dup
                 this_body.each do |key, value|
                   if value == :random_hex
                     this_body[key] = SecureRandom.hex
