@@ -86,7 +86,6 @@ class RequestGroup
                                         body: this_body,
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
-              end
             end
 
             responses << result
