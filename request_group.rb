@@ -80,11 +80,11 @@ class RequestGroup
                     this_body[key] = SecureRandom.hex
                   end
                 end
-              end
                 result = ApiRequest.post(url: url,
                                         body: this_body,
                                         verify: self.verify_ssl,
                                         headers: { Authorization: GenAuth.run })
+              end
             end
 
             responses << result
