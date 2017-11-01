@@ -18,8 +18,7 @@ bundle install
 
 If you see errors compiling native gems (for instance "could not create Makefile for some reason"),
 you may be missing some required dev libraries. We've seen this when installing on a fresh alpine linux
-Docker container, and it was fixed by installing the 'build-base' alpine package (including gcc, make, etc)
-- check your c compiler libraries~
+Docker container, and it was fixed by installing the 'build-base' alpine package (including gcc, make, etc) - check the c compiler libraries on your distribution as appropriate.
 
 ## Environment Variables
 
