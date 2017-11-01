@@ -38,7 +38,7 @@ class RequestGroup
             result = perform_request
             responses << result
             ResponsesPrinter.print(result, request_prefix)
-            
+
           rescue => e
             puts "#{request_prefix} exception - #{e.message}"
             puts e.backtrace
@@ -60,8 +60,6 @@ class RequestGroup
     url = perform_substitutions(endpoint[:endpoint], prisoner)
 
     method = endpoint[:method]
-
-    puts "DEBUG DEBUG DEBUG - #{method} #{url}"
 
     case method
       when :get

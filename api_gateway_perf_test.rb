@@ -13,7 +13,6 @@ ENDPOINT_404          = "#{BASE_URL}/foobar".freeze
 
 
 require_relative './t3/prisoners'
-require_relative './t3/endpoints'
 require_relative './batches'
 
 threads = []
