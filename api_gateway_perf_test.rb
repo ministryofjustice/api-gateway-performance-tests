@@ -7,13 +7,14 @@ require_relative './gen_auth'
 require_relative './command_line_parser'
 require_relative './request_group'
 require_relative './responses_printer'
-require_relative './batches'
 
 BASE_URL              = ENV['NOMIS_API_BASE_URL'] || 'https://noms-api-preprod.dsd.io/nomisapi'
-ENDPOINT_1            = "#{BASE_URL}/foobar".freeze
+ENDPOINT_404          = "#{BASE_URL}/foobar".freeze
+
 
 require_relative './t3/prisoners'
 require_relative './t3/endpoints'
+require_relative './batches'
 
 threads = []
 responses = []
@@ -27,7 +28,7 @@ batches_to_run = chosen_batches.map { |b| BATCHES[b.to_sym] }.flatten.compact
 # allow default batch to take some measures from the cmd line param
 default_batch_opts = {
   number_of_users: OPTS[:concurrent_users],
-  endpoints: ENDPOINTS,
+  endpoints: [ {endpoint: ENDPOINT_404, method: :get} ],
   interval_between_requests: OPTS[:interval_between_requests].to_i,
   interval_between_users: OPTS[:rampup_per_user].to_i,
   number_of_requests: OPTS[:number_of_requests] || 1
@@ -38,7 +39,9 @@ total_requests = 0
 # start of main loop
 batches_to_run.each do |batch_config|
   # create a thread for each batch
-  this_batch = batch_config.merge(default_batch_opts)
+  this_batch = default_batch_opts.merge(batch_config)
+  puts "this_batch = "
+  puts this_batch.to_s
   batch = RequestGroup.new(this_batch)
 
   threads << Thread.new do
