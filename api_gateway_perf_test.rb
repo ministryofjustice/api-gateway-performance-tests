@@ -20,8 +20,6 @@ responses = []
 
 OPTS = CommandLineParser.parse_opts
 
-ResponsesPrinter.print_heading
-
 chosen_batches = OPTS[:batches] || ['default']
 batches_to_run = chosen_batches.map { |b| BATCHES[b.to_sym] }.flatten.compact
 # allow default batch to take some measures from the cmd line param
@@ -39,8 +37,6 @@ total_requests = 0
 batches_to_run.each do |batch_config|
   # create a thread for each batch
   this_batch = default_batch_opts.merge(batch_config)
-  puts "this_batch = "
-  puts this_batch.to_s
   batch = RequestGroup.new(this_batch)
 
   threads << Thread.new do
