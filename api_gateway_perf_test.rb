@@ -8,7 +8,7 @@ require_relative './command_line_parser'
 require_relative './request_group'
 require_relative './responses_printer'
 
-BASE_URL              = ENV['NOMIS_API_BASE_URL'] || 'https://noms-api-preprod.dsd.io/nomisapi'
+BASE_URL              = ENV['NOMIS_API_BASE_URL'] || 'https://gateway.t3.nomis-api.hmpps.dsd.io/nomisapi'
 ENDPOINT_404          = "#{BASE_URL}/foobar".freeze
 
 
