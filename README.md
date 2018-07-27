@@ -95,3 +95,10 @@ bundle exec ruby ./api_gateway_perf_test.rb -b berwyn
 # run all t3 batches with 50 concurrent users, 5 requests per user
 bundle exec ruby ./api_gateway_perf_test.rb -b t3_visits,t3_accounts,t3_events,t3_active_offender -n5 -c50
 ```
+
+## Run from Docker
+
+```bash
+docker build -t api-perf-tests .
+docker run -it api-perf-tests /bin/bash
+```
